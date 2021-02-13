@@ -29,7 +29,7 @@ export default class App extends React.Component {
 					<Stack.Screen name="SignIn" component={SignInScreen} />
 					<Stack.Screen name="SignUp" component={SignUpScreen} />
 					<Stack.Screen name="DashBoard" component={DashBoard} />
-					<Stack.Screen name="Device" component={DeviceScreen} />
+					<Stack.Screen name="DeviceScreen" component={DeviceScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		);

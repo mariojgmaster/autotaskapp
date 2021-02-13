@@ -28,7 +28,7 @@ export default function TopBar(props) {
             </TouchableWithoutFeedback>
 
             {/* Para testar outras rotas */}
-            <TouchableWithoutFeedback onPress={() => props.nav.navigate('DeviceScreen')} style={styles.iconContainer}>
+            <TouchableWithoutFeedback onPress={() => props.nav.navigate(props.screen)} style={styles.iconContainer}>
                 <Text style={{ fontWeight:'bold', fontSize:props.iconSize, color:props.iconColor }}>{'\n>'}</Text>
             </TouchableWithoutFeedback>
             {/* Para testar outras rotas */}

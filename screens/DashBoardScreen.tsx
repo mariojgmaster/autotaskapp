@@ -45,6 +45,8 @@ export default function DashBoard({ navigation }) {
         <SafeAreaProvider>
             {/* <StatusBar hidden={true} /> */}
             <TopBar
+                nav={navigation}
+                screen='DeviceScreen'
                 title="DASHBOARD"
                 iconName='chevron-back-outline'
                 iconSize={40}
