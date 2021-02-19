@@ -15,59 +15,73 @@ import layouts from '../constants/Layout';
 import colors from '../constants/Colors';
 
 import TopBar from '../components/TopBar';
+import MenuScreen from '../screens/MenuScreen';
 
-const SENSORS_DATA = require('../constants/FakeSensorsData').default;
+const SENSORS_DATA = require('../constants/FakeDevicesData').default;
 
-export default function DashBoard({ navigation }) {
+export default function DeviceScreen({ navigation }) {
 
     const renderItem = ({ item }) => {
+        console.log(item)
         const path = JSON.parse(item.path)
-        let tipo;
-        let unidMed;
         let valor;
-        switch (path.type) {
-            case 1: unidMed='ºC';tipo='Temperatura';break;
-            case 2: unidMed='%';tipo='Humidade';break;
-            case 3: unidMed='lux';tipo='Luminosidade';break;
-            case 4: unidMed='dB';tipo='Intensidade Sonora';break;
-            case 5: unidMed='-';tipo='Outro';break;
-            default: unidMed='';tipo='No Type';break;
-        }
-        (path.value<10)?(valor=`0${path.value.toString()}`):(valor=path.value);
+        (path.value < 10) ? (valor = `0${path.value.toString()}`) : (valor = path.value);
         return (<Item
             imgUri={path.ImagemUri}
             title={item.nome}
-            type={tipo}
+            type={path.type}
             value={valor}
             ativo={item.ativo}
         />)
+        // item.map(it => {
+        //     console.log(it)
+        //     const path = JSON.parse(it.path)
+        //     let valor;
+        //     let a = [];
+        //     (path.value < 10) ? (valor = `0${path.value.toString()}`) : (valor = path.value);
+        //     console.log(path)
+        //     for (let i = 0; i < it.length; i++) {
+        //         a.push(<Text key={it.Id}>{it.Id}</Text>)
+        //     }
+        //     return (a);
+        // });
     }
+    
+    const [isMenuEnabled, setToggleMenu] = useState(false);
 
     return (
         <SafeAreaProvider>
             {/* <StatusBar hidden={true} /> */}
             <TopBar
+                isBackBtn={true}
                 nav={navigation}
                 screen='DashBoard'
                 title="DISPOSITIVOS"
                 iconName='chevron-back-outline'
                 iconSize={40}
                 iconColor={colors.TopBar.icon}
+                act={() => setToggleMenu(!isMenuEnabled)}
             />
             <View style={styles.container}>
                 <FlatList
-                    data={SENSORS_DATA}
+                    data={SENSORS_DATA[0]}
                     renderItem={renderItem}
                     keyExtractor={item => item.Id}
                 />
             </View>
+            {
+                isMenuEnabled ?
+                    <View style={{position:'absolute',width:layouts.window.width,height:layouts.window.height}}>
+                        <MenuScreen nav={navigation} act={() => setToggleMenu(!isMenuEnabled)} inScreen="DeviceScreen" />
+                    </View>:null
+            }
         </SafeAreaProvider>
     );
 }
 
 const Item = ({ imgUri, title, type, value, ativo, onPressBtn }) => {
-    
-    const [count, setCount] = useState(false);
+
+    const [opnDrop, setDropBtn] = useState(false);
     const [isEnabled, setIsEnabled] = useState(false);
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -79,20 +93,16 @@ const Item = ({ imgUri, title, type, value, ativo, onPressBtn }) => {
                 </View>
                 <View style={styles.listItemTitleContainer}>
                     {/* <Text style={styles.listItemTitle}>{title}</Text> */}
-                    <Text style={styles.listItemType}>{type}</Text>
-                    <View style={styles.listItemValueContainer}>
-                        <Text style={styles.listItemValue}>{value}</Text>
-                        <Text style={styles.listItemUnidade}>{ativo}</Text>
-                    </View>
+                    <Text style={styles.listItemType}>{title}</Text>
                 </View>
                 <View style={styles.toggleOptnBtnContainer}>
-                <TouchableWithoutFeedback onPress={() => setCount(!count)}>
-                    <Text style={styles.toggleOptnBtnText}>V</Text>
-                </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => setDropBtn(!opnDrop)}>
+                        <Text style={styles.toggleOptnBtnText}>V</Text>
+                    </TouchableWithoutFeedback>
                 </View>
             </View>
             {
-                count ? (
+                opnDrop ? (
                     <View style={styles.toggleOptnBtnContent}>
                         <View style={styles.btnEdit}>
                             <TouchableWithoutFeedback onPress={() => alert('EditScreen')}>
@@ -105,11 +115,11 @@ const Item = ({ imgUri, title, type, value, ativo, onPressBtn }) => {
                                 thumbColor={isEnabled ? "#BBB" : "#BBB"}
                                 onValueChange={toggleSwitch}
                                 value={isEnabled}
-                                style={{transform:[{scaleX:1.3},{scaleY:1.3}]}}
+                                style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
                             />
                         </View>
                     </View>
-                ):null
+                ) : null
             }
         </View>
     )
@@ -131,7 +141,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(0,0,0,0.2)',
         paddingVertical: 20,
         paddingHorizontal: 20,
-        backgroundColor: colors.DashBoard.background,
+        backgroundColor: colors.Devices.background,
     },
     listItemImgContainer: {
         width: 90,
@@ -158,20 +168,21 @@ const styles = StyleSheet.create({
     },
     listItemType: {
         paddingBottom: 2,
-        fontSize: 18,
+        fontSize: 22,
         fontWeight: 'bold',
+        color: colors.Devices.text,
     },
     listItemValueContainer: {
         flexDirection: 'row',
         alignItems: 'baseline',
     },
     listItemValue: {
-        color: colors.DashBoard.text,
+        color: colors.Devices.text,
         fontSize: 40,
         fontWeight: 'bold',
     },
     listItemUnidade: {
-        color: colors.DashBoard.text,
+        color: colors.Devices.text,
         marginLeft: 5,
         fontSize: 20,
         fontWeight: 'bold',
@@ -188,7 +199,7 @@ const styles = StyleSheet.create({
     },
     toggleOptnBtnContent: {
         height: 100,
-        backgroundColor: colors.DashBoard.background,
+        backgroundColor: colors.Devices.background,
         marginTop: -25,
         zIndex: -1,
         padding: 20,
@@ -198,18 +209,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
     },
-    btnEdit:{
-        width: layouts.window.width/6.5,
-        height: layouts.window.width/6.5,
+    btnEdit: {
+        width: layouts.window.width / 6.5,
+        height: layouts.window.width / 6.5,
         borderWidth: 1,
-        borderRadius: layouts.window.width/4,
+        borderRadius: layouts.window.width / 4,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    btnToggleDevice:{
-        width: layouts.window.width/6.5,
-        height: layouts.window.width/6.5,
-        borderRadius: layouts.window.width/4,
+    btnToggleDevice: {
+        width: layouts.window.width / 6.5,
+        height: layouts.window.width / 6.5,
+        borderRadius: layouts.window.width / 4,
         alignItems: 'center',
         justifyContent: 'center',
     },

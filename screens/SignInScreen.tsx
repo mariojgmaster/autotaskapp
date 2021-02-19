@@ -8,20 +8,19 @@ import {
     StyleSheet,
     StatusBar,
     TouchableOpacity,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Alert,
 } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import axios from "axios";
+import Api from '../services/api'
 
 import colors from '../constants/Colors';
 import images from '../constants/Images';
 import layouts from '../constants/Layout';
 
 const signIn = true;
-
-let handlerSignIn = nav => {
-    if(signIn) { nav.navigate('DashBoard'); }
-    else { alert('Não foi possível efetuar login.') }
-}
 
 // const logoUri = require('../assets/images/Logo.png')
 
@@ -46,30 +45,75 @@ function Logo() {
     );
 }
 
-function SignInForm(props) {
-    return (
-        <View style={ styles.signInFormContainer }>
-            <TextInput
-                style={ [styles.signInInput, styles.signInInput_username] }
-                onChangeText={() => {}}
-                placeholder="E-mail"
-            />
-            <TextInput
-                style={ [styles.signInInput, styles.signInInput_password] }
-                onChangeText={() => {}}
-                placeholder="Senha"
-                secureTextEntry={true}
-            />
-            <View style={styles.buttonSignInContainer}>
-                <TouchableOpacity
-                    style={styles.buttonSignIn}
-                    onPress={() => handlerSignIn(props.nav)}
-                >
-                    <Text style={styles.buttonSignInText}>Entrar</Text>
-                </TouchableOpacity>
+class SignInForm extends React.Component {
+
+    handlerSignIn = nav => {
+        let email = this.state.userMail;
+        let senha = this.state.userPass;
+        let stopIt = false;
+
+        let logado = this.state.users.reduce(function(total, currentValue, currentIndex, arr) {
+            if(!stopIt) {
+                if((email == currentValue.login) && (senha == currentValue.senha))
+                { console.log('Logar'); stopIt = true; return true; }
+                else { console.log('Não Logar'); stopIt = false; return false; }
+            } else { return true; }
+        }, false)
+
+        if(logado) { nav.navigate('DashBoard'); }
+        else {
+            Alert.alert('Não foi possível efetuar login.');
+            Alert.alert(
+                "Não foi possível efetuar login.",
+                "Confira suas informações e tente novamente!",
+                [
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: true }
+              );
+        }
+    }
+
+    state = {
+        users: [],
+        userName: '',
+        userMail: '',
+        userPass: '',
+        logado: false,
+    }
+
+	async componentDidMount() {
+		await axios.get(`${Api.EndPoint.URL}/usuarios`)
+        .then(res => this.setState({ users: res.data }))
+        .catch(err => console.error(`Erro no Get de Usuários: ${err}`))
+    }
+    
+    render() {
+        return (
+            <View style={ styles.signInFormContainer }>
+                <TextInput
+                    style={ [styles.signInInput, styles.signInInput_username] }
+                    onChangeText={value => { this.setState({ userMail: value }) }}
+                    placeholder="E-mail"
+                />
+                <TextInput
+                    style={ [styles.signInInput, styles.signInInput_password] }
+                    onChangeText={value => { this.setState({ userPass: value }) }}
+                    placeholder="Senha"
+                    secureTextEntry={true}
+                />
+                <View style={styles.buttonSignInContainer}>
+                    <TouchableOpacity
+                        style={styles.buttonSignIn}
+                        onPress={() => this.handlerSignIn(this.props.nav)}
+                    >
+                        <Text style={styles.buttonSignInText}>Entrar</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
-    );
+        );
+    }
+
 }
 
 function CallSignUp(props) {
@@ -90,7 +134,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        backgroundColor: colors.LogIn.background,
+        backgroundColor: colors.SignIn.background,
         paddingVertical: layouts.window.height / 10,
     },
     logoContainer: {},
@@ -126,14 +170,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: layouts.window.width / 3,
-        backgroundColor: colors.LogIn.button,
+        backgroundColor: colors.SignIn.button,
     },
     buttonSignInText: {
-        color: colors.LogIn.text,
+        color: colors.SignIn.text,
     },
     callSignUpContainer: {},
     callSignUpLinkText: {
-        color: colors.LogIn.text,
+        color: colors.SignIn.text,
         fontSize: 16,
         opacity: 0.6,
         textDecorationLine: 'underline',

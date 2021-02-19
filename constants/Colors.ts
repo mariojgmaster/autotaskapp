@@ -8,7 +8,12 @@ export default {
 		text: alternativeText,
 		background: '#161530',
 	},
-	LogIn: {
+	SignIn: {
+		button: '#343183',
+		text: alternativeText,
+		background: '#161530',
+	},
+	SignUp: {
 		button: '#343183',
 		text: alternativeText,
 		background: '#161530',
@@ -17,5 +22,14 @@ export default {
 		button: '#343183',
 		text: defaultText,
 		background: '#FFFFFF',
+	},
+	Devices: {
+		button: '#343183',
+		text: defaultText,
+		background: '#FFFFFF',
+	},
+	DrawerContent: {
+		text: alternativeText,
+		background: '#161530',
 	},
 };

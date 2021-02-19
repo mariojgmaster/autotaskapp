@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -13,10 +13,13 @@ import layouts from '../constants/Layout';
 import colors from '../constants/Colors';
 
 import TopBar from '../components/TopBar';
+import MenuScreen from '../screens/MenuScreen';
 
 const SENSORS_DATA = require('../constants/FakeSensorsData').default;
 
 export default function DashBoard({ navigation }) {
+    
+    const [isMenuEnabled, setToggleMenu] = useState(false);
 
     const renderItem = ({ item }) => {
         const path = JSON.parse(item.path)
@@ -45,12 +48,14 @@ export default function DashBoard({ navigation }) {
         <SafeAreaProvider>
             {/* <StatusBar hidden={true} /> */}
             <TopBar
+                isBackBtn={false}
                 nav={navigation}
                 screen='DeviceScreen'
                 title="DASHBOARD"
                 iconName='chevron-back-outline'
-                iconSize={40}
+                iconSize={42}
                 iconColor={colors.TopBar.icon}
+                act={() => setToggleMenu(!isMenuEnabled)}
             />
             <View style={styles.container}>
                 <FlatList
@@ -59,6 +64,12 @@ export default function DashBoard({ navigation }) {
                     keyExtractor={item => item.Id}
                 />
             </View>
+            {
+                isMenuEnabled ?
+                    <View style={{position:'absolute',width:layouts.window.width,height:layouts.window.height}}>
+                        <MenuScreen nav={navigation} act={() => setToggleMenu(!isMenuEnabled)} inScreen="DeviceScreen" />
+                    </View>:null
+            }
         </SafeAreaProvider>
     );
 }
@@ -95,6 +106,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(0,0,0,0.2)',
         paddingVertical: 20,
         paddingHorizontal: 20,
+        backgroundColor: colors.DashBoard.background,
     },
     listItemImgContainer: {
         width: 90,

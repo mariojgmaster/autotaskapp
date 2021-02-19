@@ -1,7 +1,7 @@
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import DashBoard from '../screens/DashBoardScreen';
-import DrawerContentScreen from '../screens/DrawerContentScreen';
+import MenuScreen from '../screens/MenuScreen';
 import DeviceScreen from '../screens/DeviceScreen';
 
-export { SignInScreen, SignUpScreen, DashBoard, DrawerContentScreen, DeviceScreen }
+export { SignInScreen, SignUpScreen, DashBoard, MenuScreen, DeviceScreen }

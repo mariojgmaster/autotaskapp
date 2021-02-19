@@ -1,43 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
     TouchableWithoutFeedback,
     StyleSheet
 } from 'react-native';
-// import { Ionicons } from '@expo/vector-icons';
 
 import layouts from '../constants/Layout';
 import colors from '../constants/Colors';
-import { NavigationContainer } from '@react-navigation/native';
 
-export default function TopBar(props) {
-	return (
-		<View style={styles.container}>
-            <TouchableWithoutFeedback
-                style={styles.iconContainer}
-                onPress={() => alert('Toggle Menu')}
-            >
-                {/* TODO: Resolver problema com os Icones */}
-                {/* <Ionicons
-                    name={props.iconName}
-                    size={props.iconSize}
-                    color={props.iconColor}
-                /> */}
-                <Text style={{ fontWeight:'bold', fontSize:props.iconSize, color:props.iconColor }}>{'<'}</Text>
-            </TouchableWithoutFeedback>
+export default class TopBar extends React.Component {
 
-            {/* Para testar outras rotas */}
-            <TouchableWithoutFeedback onPress={() => props.nav.navigate(props.screen)} style={styles.iconContainer}>
-                <Text style={{ fontWeight:'bold', fontSize:props.iconSize, color:props.iconColor }}>{'\n>'}</Text>
-            </TouchableWithoutFeedback>
-            {/* Para testar outras rotas */}
-            
-            <View style={styles.contentContainer}>
-                <Text style={styles.content}>{props.title}</Text>
+    state= {
+        isMenuEnabled: false
+    }
+
+    render() {
+        return (
+            <View style={styles.container}>
+                {/* {
+                    this.props.isBackBtn ?
+                        <TouchableWithoutFeedback onPress={() => this.props.nav.navigate('DashBoard')} style={styles.iconContainer}>
+                            <Text style={{ fontWeight: 'bold', fontSize: this.props.iconSize, color: this.props.iconColor }}>{'<'}</Text>
+                        </TouchableWithoutFeedback>
+                        : */}
+                        <TouchableWithoutFeedback onPress={() => this.props.act()} style={styles.iconContainer}>
+                            <Text style={{ fontWeight: 'bold', fontSize: this.props.iconSize, color: this.props.iconColor }}>{'='}</Text>
+                        </TouchableWithoutFeedback>
+                {/* } */}
+    
+                <View style={styles.contentContainer}>
+                    <Text style={styles.content}>{this.props.title}</Text>
+                </View>
             </View>
-        </View>
-	);
+        );
+    }
 }
 
 const styles = StyleSheet.create({

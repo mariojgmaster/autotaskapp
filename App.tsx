@@ -3,22 +3,16 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
-// import { createAppContainer } from 'react-navigation';
-
-// import Navigation from './navigation';
 import {
 	SignInScreen,
 	SignUpScreen,
 	DashBoard,
-	DrawerContentScreen,
+	MenuScreen,
 	DeviceScreen
 } from './navigation/index';
-// import Application from './navigation/App';
 
-const Drawer = createDrawerNavigator()
+// const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
-
-let logado = false; // TODO: Ver esta lógica depois
 
 export default class App extends React.Component {
 	render() {
@@ -30,6 +24,7 @@ export default class App extends React.Component {
 					<Stack.Screen name="SignUp" component={SignUpScreen} />
 					<Stack.Screen name="DashBoard" component={DashBoard} />
 					<Stack.Screen name="DeviceScreen" component={DeviceScreen} />
+					<Stack.Screen name="MenuScreen" component={MenuScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		);
